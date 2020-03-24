@@ -1,4 +1,4 @@
-### Irma Janes - Docket App
+### Financial Management - Spend Tracker App
 
 # https://testdriven.io/blog/dockerizing-django-with-postgres-gunicorn-and-nginx/
 
