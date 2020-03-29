@@ -20,7 +20,7 @@ class TransactionCategory(models.Model):
         return self.name
 
     class Meta:
-        verbose_name_plural = "TransactionCategories"
+        verbose_name_plural = "Transaction categories"
 
 
 class Transaction(models.Model):

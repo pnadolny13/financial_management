@@ -1,3 +1,5 @@
+export APP := spend_tracker
+
 deploy:
 	docker-compose -f docker-compose.prod.yml build
 	sh ./deploy.sh ${HOST}
@@ -18,6 +20,11 @@ docker_logs:
 migration:
 	docker-compose exec web python manage.py makemigrations ${APP}
 	docker-compose exec web python manage.py migrate ${APP}
+
+load_data:
+	docker-compose exec web python manage.py loaddata ${APP}
+	docker-compose exec web python manage.py shell -c "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@admin.com', 'admin')"
+
 
 create_admin_user:
 	docker-compose -f docker-compose.yml exec web python manage.py createsuperuser

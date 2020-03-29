@@ -1,0 +1,68 @@
+[
+    {
+        "model": "spend_tracker.transactiontype",
+        "pk": 2,
+        "fields": {
+            "name": "Expense",
+            "created_at": "2020-03-29T17:37:48.037Z"
+        }
+    },
+    {
+        "model": "spend_tracker.transactiontype",
+        "pk": 3,
+        "fields": {
+            "name": "Income",
+            "created_at": "2020-03-29T17:37:53.895Z"
+        }
+    },
+    {
+        "model": "spend_tracker.transactioncategory",
+        "pk": 2,
+        "fields": {
+            "name": "Food",
+            "created_at": "2020-03-29T17:38:18.750Z"
+        }
+    },
+    {
+        "model": "spend_tracker.transactioncategory",
+        "pk": 3,
+        "fields": {
+            "name": "Travel",
+            "created_at": "2020-03-29T17:38:25.540Z"
+        }
+    },
+    {
+        "model": "spend_tracker.transactioncategory",
+        "pk": 4,
+        "fields": {
+            "name": "Weekend",
+            "created_at": "2020-03-29T17:39:04.226Z"
+        }
+    },
+    {
+        "model": "spend_tracker.transactioncategory",
+        "pk": 5,
+        "fields": {
+            "name": "Rent and Utilities",
+            "created_at": "2020-03-29T17:39:19.847Z"
+        }
+    },
+    {
+        "model": "spend_tracker.transactioncategory",
+        "pk": 6,
+        "fields": {
+            "name": "Other",
+            "created_at": "2020-03-29T17:39:29.151Z"
+        }
+    },
+    {
+        "model": "spend_tracker.user",
+        "pk": 1,
+        "fields": {
+            "first_name": "Pat",
+            "last_name": "Nadolny",
+            "created_at": "2020-03-29T00:00:00Z",
+            "updated_at": "2020-03-29T00:00:00Z"
+        }
+    }
+]
