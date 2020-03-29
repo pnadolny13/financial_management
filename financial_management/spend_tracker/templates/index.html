@@ -1,1 +1,9 @@
 {% extends "base.html" %}
+
+{% block content %}
+    <h2>Live demo</h2>
+    {% block demo %}
+        {{ datatable }}
+    {% endblock demo %}
+    <br /><br />
+{% endblock content %}

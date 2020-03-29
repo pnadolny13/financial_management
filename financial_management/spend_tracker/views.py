@@ -41,7 +41,8 @@ class IndexView(TemplateView):
 
         return context
 
-class DemoMixin(object):
+
+class DemoMixin:
     description = """Missing description!"""
     implementation = """Missing implementation details!"""
 
@@ -49,7 +50,7 @@ class DemoMixin(object):
         """ Try the view's snake_case name, or else use default simple template. """
         name = self.__class__.__name__.replace("DatatableView", "")
         name = re.sub(r'([a-z]|[A-Z]+)(?=[A-Z])', r'\1_', name)
-        return ["demos/" + name.lower() + ".html", "example_base.html"]
+        return [f"{name}.html"]
 
     def get_context_data(self, **kwargs):
         context = super(DemoMixin, self).get_context_data(**kwargs)
@@ -79,8 +80,9 @@ class DemoMixin(object):
 
         return context
 
+
 # Column configurations
-class ZeroConfigurationDatatableView(DemoMixin, DatatableView):
+class SpendingTrackerDatatableView(DemoMixin, DatatableView):
     """
     If no columns are specified by the view's ``Datatable`` configuration object (or no
     ``datatable_class`` is given at all), ``DatatableView`` will use all of the model's local
