@@ -11,7 +11,7 @@ import datatableview
 from datatableview import Datatable
 from datatableview.views import DatatableView
 
-from .models import Entry, Blog
+from .models import User, Transaction
 
 
 class IndexView(TemplateView):
@@ -82,7 +82,7 @@ class DemoMixin:
 
 
 # Column configurations
-class SpendingTrackerDatatableView(DemoMixin, DatatableView):
+class TransactionsDatatableView(DemoMixin, DatatableView):
     """
     If no columns are specified by the view's ``Datatable`` configuration object (or no
     ``datatable_class`` is given at all), ``DatatableView`` will use all of the model's local
@@ -98,10 +98,4 @@ class SpendingTrackerDatatableView(DemoMixin, DatatableView):
     method on your view that returns a queryset with the appropriate call to ``select_related()``.
     """
 
-    model = Entry
-
-    implementation = u"""
-    class ZeroConfigurationDatatableView(DatatableView):
-        model = Entry
-    """
-
+    model = Transaction

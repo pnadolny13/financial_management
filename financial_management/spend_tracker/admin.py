@@ -1,7 +1,11 @@
 from django.contrib import admin
 
-from .models import Entry, Author, Blog
+from .models import (Budget, BudgetRule, TransactionCategory, Transaction,
+                     TransactionType, User)
 
-admin.site.register(Entry)
-admin.site.register(Author)
-admin.site.register(Blog)
+admin.site.register(User)
+admin.site.register(Budget)
+admin.site.register(BudgetRule)
+admin.site.register(Transaction)
+admin.site.register(TransactionCategory)
+admin.site.register(TransactionType)

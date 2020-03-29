@@ -4,9 +4,9 @@ except ImportError:
     from django.conf.urls import url
 
 from . import views
-from .views import SpendingTrackerDatatableView
+from .views import TransactionsDatatableView
 
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name="index"),
-    url(r'^spending_tracker/$', SpendingTrackerDatatableView.as_view(), name='spending_tracker')
+    url(r'^transactions/$', TransactionsDatatableView.as_view(), name='spending_tracker')
 ]

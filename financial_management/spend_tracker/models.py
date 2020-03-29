@@ -1,54 +1,70 @@
 # -*- encoding: utf-8 -*-
 
 from django.db import models
+from datetime import datetime
 
 
-class Blog(models.Model):
-    name = models.CharField(max_length=100)
-    tagline = models.TextField()
+class TransactionType(models.Model):
+    name = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
-    def get_absolute_url(self):
-        return "#blog-{pk}".format(pk=self.pk)
 
+class TransactionCategory(models.Model):
+    name = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now=True)
 
-class Author(models.Model):
-    name = models.CharField(max_length=50)
-    email = models.EmailField()
-
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
-    def get_absolute_url(self):
-        return "#author-{pk}".format(pk=self.pk)
+    class Meta:
+        verbose_name_plural = "TransactionCategories"
 
 
-class Entry(models.Model):
-    blog = models.ForeignKey('Blog', on_delete=models.CASCADE, null=True)
-    headline = models.CharField(max_length=255)
-    body_text = models.TextField()
-    pub_date = models.DateField()
-    mod_date = models.DateField()
-    authors = models.ManyToManyField(Author)
-    n_comments = models.IntegerField()
-    n_pingbacks = models.IntegerField()
-    rating = models.IntegerField()
-    status = models.IntegerField(choices=(
-        (0, "Draft"),
-        (1, "Published"),
-    ))
-    is_published = models.BooleanField(default=False)
+class Transaction(models.Model):
+    user_id = models.ForeignKey('User', on_delete=models.CASCADE, null=False)
+    transaction_type = models.ForeignKey('TransactionType', on_delete=models.CASCADE, null=False)
+    transaction_category = models.ForeignKey('TransactionCategory', on_delete=models.CASCADE, null=False)
+    amount = models.DecimalField(decimal_places=2, max_digits=7)
+    description = models.CharField(max_length=1000)
+    forecast_transaction_flag = models.BooleanField()
+    transaction_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
-    def __unicode__(self):
-        return self.headline
+    def __str__(self):
+        return self.description + ': ' + datetime.strftime(self.created_at, '%Y-%m-%d')
 
-    def get_absolute_url(self):
-        return "#entry-{pk}".format(pk=self.pk)
 
-    def get_pub_date(self):
-        return self.pub_date
+class BudgetRule(models.Model):
+    user_id = models.ForeignKey('Budget', on_delete=models.CASCADE, null=False)
+    transaction_category = models.ForeignKey('TransactionCategory', on_delete=models.CASCADE, null=False)
+    max_spend_rule = models.DecimalField(decimal_places=2, max_digits=7)
+    description = models.CharField(max_length=1000)
+    created_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
-    def get_interaction_total(self):
-        return self.n_comments + self.n_pingbacks
+    def __str__(self):
+        return self.description
+
+
+class Budget(models.Model):
+    user_id = models.ForeignKey('User', on_delete=models.CASCADE, null=False)
+    description = models.CharField(max_length=1000)
+    created_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.description
+
+
+class User(models.Model):
+    first_name = models.CharField(max_length=255)
+    last_name = models.TextField()
+    created_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.first_name
