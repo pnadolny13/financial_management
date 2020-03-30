@@ -2,6 +2,7 @@
 
 from django.db import models
 from datetime import datetime
+from django.contrib.auth import get_user_model
 
 
 class TransactionType(models.Model):
@@ -24,7 +25,7 @@ class TransactionCategory(models.Model):
 
 
 class Transaction(models.Model):
-    user_id = models.ForeignKey('User', on_delete=models.CASCADE, null=False)
+    user_id = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=False)
     transaction_type = models.ForeignKey('TransactionType', on_delete=models.CASCADE, null=False)
     transaction_category = models.ForeignKey('TransactionCategory', on_delete=models.CASCADE, null=False)
     amount = models.DecimalField(decimal_places=2, max_digits=7)
@@ -51,20 +52,10 @@ class BudgetRule(models.Model):
 
 
 class Budget(models.Model):
-    user_id = models.ForeignKey('User', on_delete=models.CASCADE, null=False)
+    user_id = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=False)
     description = models.CharField(max_length=1000)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.description
-
-
-class User(models.Model):
-    first_name = models.CharField(max_length=255)
-    last_name = models.TextField()
-    created_at = models.DateTimeField(auto_now=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.first_name

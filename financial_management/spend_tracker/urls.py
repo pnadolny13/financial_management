@@ -1,12 +1,12 @@
-try:
-    from django.urls import url
-except ImportError:
-    from django.conf.urls import url
+from django.conf.urls import url
+from django.contrib.auth import views as auth_views
+from django.urls import include, path
 
 from . import views
-from .views import TransactionsDatatableView
+from .views import IndexView, TransactionsDatatableView
 
 urlpatterns = [
-    url(r'^$', views.IndexView.as_view(), name="index"),
-    url(r'^transactions/$', TransactionsDatatableView.as_view(), name='spending_tracker')
+    path('', TransactionsDatatableView.as_view(), name="index"),
+    path('transactions/', TransactionsDatatableView.as_view(), name='transactions'),
+    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
 ]

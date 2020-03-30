@@ -6,12 +6,13 @@ import re
 import django
 from django.urls import reverse
 from django.views.generic import View, TemplateView
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 import datatableview
 from datatableview import Datatable
 from datatableview.views import DatatableView
 
-from .models import User, Transaction
+from .models import Transaction
 
 
 class IndexView(TemplateView):
@@ -42,9 +43,7 @@ class IndexView(TemplateView):
         return context
 
 
-class DemoMixin:
-    description = """Missing description!"""
-    implementation = """Missing implementation details!"""
+class BasicMixin:
 
     def get_template_names(self):
         """ Try the view's snake_case name, or else use default simple template. """
@@ -53,7 +52,7 @@ class DemoMixin:
         return [f"{name}.html"]
 
     def get_context_data(self, **kwargs):
-        context = super(DemoMixin, self).get_context_data(**kwargs)
+        context = super(BasicMixin, self).get_context_data(**kwargs)
         context['implementation'] = self.implementation
 
         # Unwrap the lines of description text so that they don't linebreak funny after being put
@@ -82,7 +81,7 @@ class DemoMixin:
 
 
 # Column configurations
-class TransactionsDatatableView(DemoMixin, DatatableView):
+class TransactionsDatatableView(PermissionRequiredMixin, BasicMixin, DatatableView):
     """
     If no columns are specified by the view's ``Datatable`` configuration object (or no
     ``datatable_class`` is given at all), ``DatatableView`` will use all of the model's local
@@ -97,5 +96,6 @@ class TransactionsDatatableView(DemoMixin, DatatableView):
     columns, generating at least one extra query per displayed row.  Implement a ``get_queryset()``
     method on your view that returns a queryset with the appropriate call to ``select_related()``.
     """
-
+    permission_required = ''
+    redirect_field_name = 'transactions'
     model = Transaction
