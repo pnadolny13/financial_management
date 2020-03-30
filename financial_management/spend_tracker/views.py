@@ -7,12 +7,14 @@ import django
 from django.urls import reverse
 from django.views.generic import View, TemplateView
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.http import HttpResponseRedirect
 
 import datatableview
 from datatableview import Datatable
 from datatableview.views import DatatableView
 
 from .models import Transaction
+from .forms import TransactionForm
 
 
 class IndexView(TemplateView):
@@ -53,30 +55,6 @@ class BasicMixin:
 
     def get_context_data(self, **kwargs):
         context = super(BasicMixin, self).get_context_data(**kwargs)
-        context['implementation'] = self.implementation
-
-        # Unwrap the lines of description text so that they don't linebreak funny after being put
-        # through the ``linebreaks`` template filter.
-        alert_types = ['info', 'warning', 'danger']
-        paragraphs = []
-        p = []
-        alert = False
-        for line in self.__doc__.splitlines():
-            line = line[4:].rstrip()
-            if not line:
-                if alert:
-                    p.append(u"""</div>""")
-                    alert = False
-                paragraphs.append(p)
-                p = []
-            elif line.lower()[:-1] in alert_types:
-                p.append(u"""<div class="alert alert-{type}">""".format(type=line.lower()[:-1]))
-                alert = True
-            else:
-                p.append(line)
-        description = "\n\n".join(" ".join(p) for p in paragraphs)
-        context['description'] = re.sub(r'``(.*?)``', r'<code>\1</code>', description)
-
         return context
 
 
@@ -99,3 +77,22 @@ class TransactionsDatatableView(PermissionRequiredMixin, BasicMixin, DatatableVi
     permission_required = ''
     redirect_field_name = 'transactions'
     model = Transaction
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form = TransactionForm()
+        context['form'] = form
+        return context
+
+    def post(self, request):
+        form = TransactionForm(request.POST)
+        if form.is_valid():
+            Transaction.objects.create(
+                user_id=form.cleaned_data['user'],
+                transaction_type=form.cleaned_data['trans_type'],
+                transaction_category=form.cleaned_data['trans_cat'],
+                amount=form.cleaned_data['amount'],
+                description=form.cleaned_data['description'],
+                forecast_transaction_flag=False
+            )
+        return HttpResponseRedirect('/')
