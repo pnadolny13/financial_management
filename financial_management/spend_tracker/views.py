@@ -58,6 +58,18 @@ class BasicMixin:
         return context
 
 
+class TransactionDatatable(Datatable):
+    class Meta:
+        model = Transaction
+        columns = ['transaction_type', 'amount', 'transaction_category', 'description', 'forecast_transaction_flag', 'transaction_at']
+        ordering = ['-id']
+        # page_length = 5
+        # search_fields = ['blog__name']
+        # unsortable_columns = ['n_comments']
+        # hidden_columns = ['n_pingbacks']
+        structure_template = 'datatableview/default_structure.html'
+
+
 # Column configurations
 class TransactionsDatatableView(PermissionRequiredMixin, BasicMixin, DatatableView):
     """
@@ -75,8 +87,9 @@ class TransactionsDatatableView(PermissionRequiredMixin, BasicMixin, DatatableVi
     method on your view that returns a queryset with the appropriate call to ``select_related()``.
     """
     permission_required = ''
-    redirect_field_name = 'transactions'
+    # redirect_field_name = 'transactions'
     model = Transaction
+    datatable_class = TransactionDatatable
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -89,8 +102,8 @@ class TransactionsDatatableView(PermissionRequiredMixin, BasicMixin, DatatableVi
         if form.is_valid():
             Transaction.objects.create(
                 user_id=form.cleaned_data['user'],
-                transaction_type=form.cleaned_data['trans_type'],
-                transaction_category=form.cleaned_data['trans_cat'],
+                transaction_type=form.cleaned_data['type'],
+                transaction_category=form.cleaned_data['category'],
                 amount=form.cleaned_data['amount'],
                 description=form.cleaned_data['description'],
                 forecast_transaction_flag=False
