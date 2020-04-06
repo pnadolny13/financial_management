@@ -66,6 +66,10 @@ class TransactionsDatatableView(LoginRequiredMixin, BasicMixin, DatatableView):
     model = Transaction
     datatable_class = TransactionDatatable
 
+    def get_queryset(self):
+        queryset = super(TransactionsDatatableView, self).get_queryset()
+        return queryset.filter(user_id=self.request.user)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         form = TransactionForm()
@@ -76,7 +80,7 @@ class TransactionsDatatableView(LoginRequiredMixin, BasicMixin, DatatableView):
         form = TransactionForm(request.POST)
         if form.is_valid():
             Transaction.objects.create(
-                user_id=form.cleaned_data['user'],
+                user_id=request.user,
                 transaction_type=form.cleaned_data['type'],
                 transaction_category=form.cleaned_data['category'],
                 amount=form.cleaned_data['amount'],
