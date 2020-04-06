@@ -128,4 +128,5 @@ USE_TZ = True
 
 STATIC_URL = "/staticfiles/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-LOGIN_URL = '/spend_tracker/login/?next=/transactions/'
+LOGIN_REDIRECT_URL = 'transactions'
+LOGOUT_REDIRECT_URL = '/accounts/login'

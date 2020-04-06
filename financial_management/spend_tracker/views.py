@@ -1,48 +1,20 @@
 # -*- encoding: utf-8 -*-
 
-from os import sep
 import os.path
 import re
-import django
-from django.urls import reverse
-from django.views.generic import View, TemplateView
-from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.http import HttpResponseRedirect
+from os import sep
 
 import datatableview
+import django
+from braces.views import LoginRequiredMixin
 from datatableview import Datatable
 from datatableview.views import DatatableView
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.views.generic import TemplateView, View
 
-from .models import Transaction
 from .forms import TransactionForm
-
-
-class IndexView(TemplateView):
-    template_name = "index.html"
-
-    def get_context_data(self, **kwargs):
-        context = super(IndexView, self).get_context_data(**kwargs)
-
-        # Try to determine if the user jumped the gun on testing things out
-        db_works = True
-        try:
-            list(Entry.objects.all()[:1])
-        except:
-            db_works = False
-        context['db_works'] = db_works
-
-        path, working_directory = os.path.split(os.path.abspath('.'))
-        context['working_directory'] = working_directory
-        context['os_sep'] = sep
-
-        # Versions
-        context.update({
-            'datatableview_version': '.'.join(map(str, datatableview.__version_info__)),
-            'django_version': django.get_version(),
-            'datatables_version': '1.10.9',
-        })
-
-        return context
+from .models import Transaction
 
 
 class BasicMixin:
@@ -71,7 +43,7 @@ class TransactionDatatable(Datatable):
 
 
 # Column configurations
-class TransactionsDatatableView(PermissionRequiredMixin, BasicMixin, DatatableView):
+class TransactionsDatatableView(LoginRequiredMixin, BasicMixin, DatatableView):
     """
     If no columns are specified by the view's ``Datatable`` configuration object (or no
     ``datatable_class`` is given at all), ``DatatableView`` will use all of the model's local
@@ -86,7 +58,10 @@ class TransactionsDatatableView(PermissionRequiredMixin, BasicMixin, DatatableVi
     columns, generating at least one extra query per displayed row.  Implement a ``get_queryset()``
     method on your view that returns a queryset with the appropriate call to ``select_related()``.
     """
-    permission_required = ''
+    # optional
+    login_url = "/accounts/login"
+    raise_exception = True
+
     # redirect_field_name = 'transactions'
     model = Transaction
     datatable_class = TransactionDatatable

@@ -26,4 +26,4 @@ load_data:
 	docker-compose exec web python manage.py loaddata ${APP}
 
 create_admin_user:
-	docker-compose -f docker-compose.yml exec web python manage.py createsuperuser
+	docker-compose -f docker-compose.yml exec web python manage.py createsuperuser	
