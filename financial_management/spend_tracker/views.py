@@ -60,9 +60,7 @@ class TransactionsDatatableView(LoginRequiredMixin, BasicMixin, DatatableView):
     """
     # optional
     login_url = "/accounts/login"
-    raise_exception = True
 
-    # redirect_field_name = 'transactions'
     model = Transaction
     datatable_class = TransactionDatatable
 

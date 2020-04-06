@@ -45,12 +45,26 @@
         </script>
     {% endblock static %}
 </head>
+{% block navbar %}
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Spend Tracker</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="/">Transactions</a></li>
+      <li><a href="/accounts/logout">Logout</a></li>
+    </ul>
+  </div>
+</nav>
+{% endblock %}
 <body>
     <div class="container">
         <br />
         <div class="row">
             <div class="col-md-9">
-                {% block content %}{% endblock content %}
+                {% block content %}
+                {% endblock content %}
             </div>
         </div>
     </div>
