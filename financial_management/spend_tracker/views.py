@@ -44,21 +44,7 @@ class TransactionDatatable(Datatable):
 
 # Column configurations
 class TransactionsDatatableView(LoginRequiredMixin, BasicMixin, DatatableView):
-    """
-    If no columns are specified by the view's ``Datatable`` configuration object (or no
-    ``datatable_class`` is given at all), ``DatatableView`` will use all of the model's local
-    fields.  Note that this does not include reverse relationships, many-to-many fields (even if the
-    ``ManyToManyField`` is defined on the model directly), nor the special ``pk`` field, but DOES
-    include ``ForeignKey`` fields defined directly on the model.
-
-    Note that fields will automatically use their ``verbose_name`` for the frontend table headers.
-
-    WARNING:
-    When no columns list is explicitly given, the table will end up trying to show foreign keys as
-    columns, generating at least one extra query per displayed row.  Implement a ``get_queryset()``
-    method on your view that returns a queryset with the appropriate call to ``select_related()``.
-    """
-    # optional
+    # permissions
     login_url = "/accounts/login"
 
     model = Transaction
@@ -86,3 +72,21 @@ class TransactionsDatatableView(LoginRequiredMixin, BasicMixin, DatatableView):
                 forecast_transaction_flag=False
             )
         return HttpResponseRedirect('/')
+
+
+class BudgetDatatableView(LoginRequiredMixin, BasicMixin, DatatableView):
+    # permissions
+    login_url = "/accounts/login"
+
+    model = Transaction
+    datatable_class = TransactionDatatable
+
+    def get_queryset(self):
+        queryset = super(BudgetDatatableView, self).get_queryset()
+        return queryset.filter(user_id=self.request.user)
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     form = TransactionForm()
+    #     context['form'] = form
+    #     return context
