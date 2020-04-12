@@ -23,6 +23,7 @@ class BasicMixin:
         """ Try the view's snake_case name, or else use default simple template. """
         name = self.__class__.__name__.replace("DatatableView", "")
         name = re.sub(r'([a-z]|[A-Z]+)(?=[A-Z])', r'\1_', name)
+        name = name.lower()
         return [f"{name}.html"]
 
     def get_context_data(self, **kwargs):
