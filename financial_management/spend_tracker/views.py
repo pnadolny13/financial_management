@@ -7,8 +7,8 @@ from os import sep
 import datatableview
 import django
 from braces.views import LoginRequiredMixin
-from datatableview import Datatable
-from datatableview.views import DatatableView
+from datatableview import Datatable, helpers
+from datatableview.views import DatatableView, XEditableDatatableView
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import TemplateView, View
@@ -36,15 +36,15 @@ class TransactionDatatable(Datatable):
         model = Transaction
         columns = ['transaction_type', 'amount', 'transaction_category', 'description', 'forecast_transaction_flag', 'transaction_at']
         ordering = ['-id']
-        # page_length = 5
-        # search_fields = ['blog__name']
-        # unsortable_columns = ['n_comments']
-        # hidden_columns = ['n_pingbacks']
         structure_template = 'datatableview/default_structure.html'
+        processors = {
+                'amount': helpers.make_xeditable,
+                'description': helpers.make_xeditable,
+        }
 
 
 # Column configurations
-class TransactionsDatatableView(LoginRequiredMixin, BasicMixin, DatatableView):
+class TransactionsDatatableView(LoginRequiredMixin, BasicMixin, XEditableDatatableView):
     # permissions
     login_url = "/accounts/login"
 
@@ -72,6 +72,8 @@ class TransactionsDatatableView(LoginRequiredMixin, BasicMixin, DatatableView):
                 description=form.cleaned_data['description'],
                 forecast_transaction_flag=False
             )
+        else:
+            super().post(request)
         return HttpResponseRedirect('/')
 
 
@@ -85,9 +87,3 @@ class BudgetDatatableView(LoginRequiredMixin, BasicMixin, DatatableView):
     def get_queryset(self):
         queryset = super(BudgetDatatableView, self).get_queryset()
         return queryset.filter(user_id=self.request.user)
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     form = TransactionForm()
-    #     context['form'] = form
-    #     return context
