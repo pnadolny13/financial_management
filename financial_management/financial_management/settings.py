@@ -36,9 +36,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'spend_tracker',
     'datatableview',
     'crispy_forms',
+    'spend_tracker',
 ]
 
 
