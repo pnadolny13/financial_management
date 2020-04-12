@@ -3,7 +3,7 @@ export ADMIN_PASS := admin
 export ENV := 
 
 deploy:
-	docker-compose -f docker-compose.${ENV}yml build
+	docker-compose -f docker-compose.prod.yml build
 	sh ./deploy.sh ${HOST}
 
 init_server:
