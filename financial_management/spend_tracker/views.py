@@ -87,3 +87,26 @@ class BudgetDatatableView(LoginRequiredMixin, BasicMixin, DatatableView):
     def get_queryset(self):
         queryset = super(BudgetDatatableView, self).get_queryset()
         return queryset.filter(user_id=self.request.user)
+
+
+class DownloadView(TemplateView):
+    template_name = "download.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form = DownloadForm()
+        context['form'] = form
+        return context
+
+    def post(self, request):
+        form = DownloadForm(request.POST)
+        if form.is_valid():
+            file_name = form.cleaned_data['file_name']
+            file_path = os.path.join('/usr/src/app/spend_tracker/download/', file_name)
+            if os.path.exists(file_path):
+                with open(file_path, 'rb') as fh:
+                    response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
+                    response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
+                    return response
+            else:
+                raise Exception(f'File doesnt exists {file_path}')

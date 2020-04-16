@@ -62,5 +62,62 @@
             "name": "Other",
             "created_at": "2020-03-29T17:39:29.151Z"
         }
+    },
+    {
+        "model": "auth.user",
+        "pk": 2,
+        "fields": {
+            "password": "pbkdf2_sha256$180000$PKiA3AafTSIY$YueXywQSdEIeNXDl6TyEixDyiq0gjM+Jb8OP69yML7Q=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "pnadolny",
+            "first_name": "Pat",
+            "last_name": "Nadolny",
+            "email": "",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2020-03-29T23:25:58Z",
+            "groups": [],
+            "user_permissions": [
+                25,
+                26,
+                27,
+                28,
+                41,
+                42,
+                43,
+                44,
+                37,
+                38,
+                39,
+                40,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36
+            ]
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 3,
+        "fields": {
+            "password": "pbkdf2_sha256$180000$NTskorbdkmNx$oYkryB6k/pGZSKPXsyyk/OU8UUph0pHbgSBi5S/2M7o=",
+            "last_login": null,
+            "is_superuser": true,
+            "username": "admin",
+            "first_name": "",
+            "last_name": "",
+            "email": "admin@admin.com",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2020-03-29T23:28:41.207Z",
+            "groups": [],
+            "user_permissions": []
+        }
     }
 ]
