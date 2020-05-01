@@ -33,13 +33,15 @@ class BasicMixin:
 
 class TransactionDatatable(Datatable):
     class Meta:
-        columns = ['transaction_type', 'amount', 'transaction_category', 'description', 'forecast_transaction_flag', 'transaction_at']
+        columns = [
+            'transaction_type', 'amount', 'transaction_category', 'description',
+            'forecast_transaction_flag', 'transaction_at']
         ordering = ['-id']
         structure_template = 'datatableview/default_structure.html'
         processors = {
-                'amount': helpers.make_xeditable,
-                'description': helpers.make_xeditable,
-                'forecast_transaction_flag': helpers.make_xeditable,
+            'amount': helpers.make_xeditable,
+            'description': helpers.make_xeditable,
+            'forecast_transaction_flag': helpers.make_xeditable,
         }
 
 
