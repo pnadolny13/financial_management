@@ -33,13 +33,13 @@ class BasicMixin:
 
 class TransactionDatatable(Datatable):
     class Meta:
-        model = Transaction
         columns = ['transaction_type', 'amount', 'transaction_category', 'description', 'forecast_transaction_flag', 'transaction_at']
         ordering = ['-id']
         structure_template = 'datatableview/default_structure.html'
         processors = {
                 'amount': helpers.make_xeditable,
                 'description': helpers.make_xeditable,
+                'forecast_transaction_flag': helpers.make_xeditable,
         }
 
 
@@ -70,14 +70,15 @@ class TransactionsDatatableView(LoginRequiredMixin, BasicMixin, XEditableDatatab
                 transaction_category=form.cleaned_data['category'],
                 amount=form.cleaned_data['amount'],
                 description=form.cleaned_data['description'],
-                forecast_transaction_flag=False
+                forecast_transaction_flag=False,
+                transaction_at=form.cleaned_data['transaction_at'],
             )
         else:
             super().post(request)
         return HttpResponseRedirect('/')
 
 
-class BudgetDatatableView(LoginRequiredMixin, BasicMixin, DatatableView):
+class BudgetDatatableView(LoginRequiredMixin, BasicMixin, XEditableDatatableView):
     # permissions
     login_url = "/accounts/login"
 

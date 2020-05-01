@@ -31,8 +31,8 @@ class Transaction(models.Model):
     amount = models.DecimalField(decimal_places=2, max_digits=7)
     description = models.CharField(max_length=1000)
     forecast_transaction_flag = models.BooleanField()
-    transaction_at = models.DateTimeField(auto_now=True)
-    created_at = models.DateTimeField(auto_now=True)
+    transaction_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):

@@ -8,3 +8,4 @@ class TransactionForm(forms.Form):
     category = forms.ModelChoiceField(queryset=TransactionCategory.objects.all())
     amount = forms.CharField(max_length=100)
     description = forms.CharField(max_length=100)
+    transaction_at = forms.DateTimeField(widget=forms.widgets.DateInput(attrs={'type': 'date'}))
