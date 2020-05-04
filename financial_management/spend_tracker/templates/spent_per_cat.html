@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <div id="container" style="width: 75%;">
+    <canvas id="spent_per_cat_calc" data-url="{% url 'spent_per_cat_calc' %}"></canvas>
+  </div>
+
+  <script>
+
+    $(function () {
+
+      var $spent_per_cat_calcChart = $("#spent_per_cat_calc");
+      $.ajax({
+        url: $spent_per_cat_calcChart.data("url"),
+        success: function (data) {
+
+          var ctx = $spent_per_cat_calcChart[0].getContext("2d");
+
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: data.labels,
+              datasets: [{
+                label: 'Amount Spent',
+                backgroundColor: 'blue',
+                data: data.data
+              }]          
+            },
+            options: {
+              responsive: true,
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Spent By Category (Current Month)'
+              },
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          // Include a dollar sign in the ticks
+                          callback: function(value, index, values) {
+                              return '$' + value;
+                          }
+                      }
+                  }]
+              }
+            }
+          });
+
+        }
+      });
+
+    });
+
+  </script>
+
+{% endblock %}

@@ -1,5 +1,7 @@
 # -*- encoding: utf-8 -*-
 
+import calendar
+import datetime
 import os.path
 import re
 from os import sep
@@ -9,12 +11,14 @@ import django
 from braces.views import LoginRequiredMixin
 from datatableview import Datatable, helpers
 from datatableview.views import DatatableView, XEditableDatatableView
-from django.http import HttpResponseRedirect
+from django.db.models import Sum
+from django.http import HttpResponseRedirect, JsonResponse
+from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import TemplateView, View
 
 from .forms import TransactionForm
-from .models import Transaction
+from .models import Transaction, TransactionCategory
 
 
 class BasicMixin:
@@ -90,3 +94,26 @@ class BudgetDatatableView(LoginRequiredMixin, BasicMixin, XEditableDatatableView
     def get_queryset(self):
         queryset = super(BudgetDatatableView, self).get_queryset()
         return queryset.filter(user_id=self.request.user)
+
+
+def spent_per_cat(request):
+    return render(request, 'spent_per_cat.html')
+
+
+def spent_per_cat_calc(request):
+    labels = []
+    data = []
+    today = datetime.date.today()
+    _, num_days = calendar.monthrange(today.year, today.month)
+    start_date = datetime.date(today.year, today.month, 1)
+    end_date = datetime.date(today.year, today.month, num_days)
+    queryset = Transaction.objects.values('transaction_category').annotate(toal_spent=Sum('amount')).filter(transaction_at__range=(start_date, end_date))
+    for entry in queryset:
+        cat_name = TransactionCategory.objects.values('name').get(id=entry['transaction_category'])
+        labels.append(cat_name['name'])
+        data.append(entry['toal_spent'])
+    
+    return JsonResponse(data={
+        'labels': labels,
+        'data': data,
+    })
