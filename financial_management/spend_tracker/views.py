@@ -112,7 +112,6 @@ def spent_per_cat_calc(request):
         cat_name = TransactionCategory.objects.values('name').get(id=entry['transaction_category'])
         labels.append(cat_name['name'])
         data.append(entry['toal_spent'])
-    
     return JsonResponse(data={
         'labels': labels,
         'data': data,
