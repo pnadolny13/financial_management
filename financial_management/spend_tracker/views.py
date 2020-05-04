@@ -114,11 +114,13 @@ def spent_per_cat_calc(request):
     for spent in spent_per_category:
         spent_lookup[spent.get('transaction_category')] = spent.get('total_spent')
     # Budget amount by category lookup
-    bud_id = Budget.objects.values('id').filter(user_id=request.user)[0]['id']
-    category_budget_rules = BudgetRule.objects.values('transaction_category', 'max_spend_rule').filter(budget_id=bud_id)
     budget_lookup = {}
-    for rule in category_budget_rules:
-        budget_lookup[rule.get('transaction_category')] = rule.get('max_spend_rule')
+    bud = Budget.objects.values('id').filter(user_id=request.user)
+    if bud:
+        bud_id = bud[0]['id']
+        category_budget_rules = BudgetRule.objects.values('transaction_category', 'max_spend_rule').filter(budget_id=bud_id)
+        for rule in category_budget_rules:
+            budget_lookup[rule.get('transaction_category')] = rule.get('max_spend_rule')
     # Add spent and budget by category to data
     categories = TransactionCategory.objects.values('name', 'id')
     for category in categories:
