@@ -40,7 +40,7 @@ class Transaction(models.Model):
 
 
 class BudgetRule(models.Model):
-    user_id = models.ForeignKey('Budget', on_delete=models.CASCADE, null=False)
+    budget_id = models.ForeignKey('Budget', on_delete=models.CASCADE, null=False)
     transaction_category = models.ForeignKey('TransactionCategory', on_delete=models.CASCADE, null=False)
     max_spend_rule = models.DecimalField(decimal_places=2, max_digits=7)
     description = models.CharField(max_length=1000)

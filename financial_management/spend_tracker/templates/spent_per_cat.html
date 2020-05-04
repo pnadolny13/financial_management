@@ -16,17 +16,22 @@
         success: function (data) {
 
           var ctx = $spent_per_cat_calcChart[0].getContext("2d");
-
-          new Chart(ctx, {
-            type: 'bar',
-            data: {
+          var chart_data = {
               labels: data.labels,
               datasets: [{
                 label: 'Amount Spent',
                 backgroundColor: 'blue',
-                data: data.data
+                data: data.spent_data
+              },
+              {
+                label: 'Budget',
+                backgroundColor: 'red',
+                data: data.budget_data
               }]          
-            },
+            }
+          new Chart(ctx, {
+            type: 'bar',
+            data: chart_data,
             options: {
               responsive: true,
               legend: {

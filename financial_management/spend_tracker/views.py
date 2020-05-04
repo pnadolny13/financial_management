@@ -18,7 +18,7 @@ from django.urls import reverse
 from django.views.generic import TemplateView, View
 
 from .forms import TransactionForm
-from .models import Transaction, TransactionCategory
+from .models import Budget, BudgetRule, Transaction, TransactionCategory
 
 
 class BasicMixin:
@@ -103,16 +103,30 @@ def spent_per_cat(request):
 def spent_per_cat_calc(request):
     labels = []
     data = []
+    budget_data = []
     today = datetime.date.today()
     _, num_days = calendar.monthrange(today.year, today.month)
     start_date = datetime.date(today.year, today.month, 1)
     end_date = datetime.date(today.year, today.month, num_days)
-    queryset = Transaction.objects.values('transaction_category').annotate(toal_spent=Sum('amount')).filter(transaction_at__range=(start_date, end_date))
-    for entry in queryset:
-        cat_name = TransactionCategory.objects.values('name').get(id=entry['transaction_category'])
-        labels.append(cat_name['name'])
-        data.append(entry['toal_spent'])
+    # Sum of spent by category lookup
+    spent_per_category = Transaction.objects.values('transaction_category').annotate(total_spent=Sum('amount')).filter(transaction_at__range=(start_date, end_date))
+    spent_lookup = {}
+    for spent in spent_per_category:
+        spent_lookup[spent.get('transaction_category')] = spent.get('total_spent')
+    # Budget amount by category lookup
+    bud_id = Budget.objects.values('id').filter(user_id=request.user)[0]['id']
+    category_budget_rules = BudgetRule.objects.values('transaction_category', 'max_spend_rule').filter(budget_id=bud_id)
+    budget_lookup = {}
+    for rule in category_budget_rules:
+        budget_lookup[rule.get('transaction_category')] = rule.get('max_spend_rule')
+    # Add spent and budget by category to data
+    categories = TransactionCategory.objects.values('name', 'id')
+    for category in categories:
+        labels.append(category['name'])
+        data.append(spent_lookup.get(category['id']))
+        budget_data.append(budget_lookup.get(category['id']))
     return JsonResponse(data={
         'labels': labels,
-        'data': data,
+        'spent_data': data,
+        'budget_data': budget_data
     })
