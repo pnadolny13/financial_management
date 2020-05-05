@@ -3,6 +3,21 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
+    {% block navbar %}
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+            <a class="navbar-brand" href="/">Spend Tracker</a>
+            </div>
+            <ul class="nav navbar-nav">
+            <li><a href="/">Transactions</a></li>
+            <li class="active"><a href="/budget"> Budget</a></li>
+            <li><a href="/month_budget_status"> Spent</a></li>
+            <li><a href="/accounts/logout">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+    {% endblock %}
     <h2>Budget</h2>
     <form action="" method="post">
         {% csrf_token %}
