@@ -3,19 +3,19 @@
 {% block content %}
 
   <div id="container" style="width: 75%;">
-    <canvas id="spent_per_cat_calc" data-url="{% url 'spent_per_cat_calc' %}"></canvas>
+    <canvas id="month_budget_chart" data-url="{% url 'month_budget_chart' %}"></canvas>
   </div>
 
   <script>
 
     $(function () {
 
-      var $spent_per_cat_calcChart = $("#spent_per_cat_calc");
+      var $month_budgetChart = $("#month_budget_chart");
       $.ajax({
-        url: $spent_per_cat_calcChart.data("url"),
+        url: $month_budgetChart.data("url"),
         success: function (data) {
 
-          var ctx = $spent_per_cat_calcChart[0].getContext("2d");
+          var ctx = $month_budgetChart[0].getContext("2d");
           var chart_data = {
               labels: data.labels,
               datasets: [{
