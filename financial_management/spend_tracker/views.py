@@ -95,6 +95,7 @@ class BudgetDatatableView(LoginRequiredMixin, BasicMixin, XEditableDatatableView
         queryset = super(BudgetDatatableView, self).get_queryset()
         return queryset.filter(user_id=self.request.user)
 
+
 class MonthBudgetStatus(LoginRequiredMixin, TemplateView):
     template_name = 'month_budget_status.html'
 
